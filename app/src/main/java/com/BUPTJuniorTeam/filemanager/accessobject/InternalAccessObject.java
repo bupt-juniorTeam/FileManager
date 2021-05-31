@@ -1,8 +1,15 @@
 package com.BUPTJuniorTeam.filemanager.accessobject;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+import android.widget.Toast;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class InternalAccessObject implements IAccessObject {
     /**
@@ -17,14 +24,50 @@ public class InternalAccessObject implements IAccessObject {
         return null;
     }
 
+   private SpecifiedFileAccess fileAccess;
+
     /**
      * 选择合适的软件打开文件，如果是文件夹，则打开文件夹
      *
      * @param filename 需要打开的文件名
      */
     @Override
-    public void open(String filename) {
+    public Intent open(String filename) {
         // TODO: 打开文件
+        File file = new File(filename);
+
+        if (!file.exists()) {
+            //如果文件不存在
+            return null;
+        }
+        Intent intent;
+        /* 取得扩展名 */
+        String end = file.getName().substring(file.getName().lastIndexOf(".") + 1, file.getName().length()).toLowerCase(Locale.getDefault());
+        /* 依扩展名的类型决定MimeType */
+        if (end.equals("m4a") || end.equals("mp3") || end.equals("mid") || end.equals("xmf") || end.equals("ogg") || end.equals("wav")) {
+            intent = fileAccess.getAudioFileIntent(filename);
+        } else if (end.equals("3gp") || end.equals("mp4")) {
+            intent = fileAccess.getVideoFileIntent(filename);
+        } else if (end.equals("jpg") || end.equals("gif") || end.equals("png") || end.equals("jpeg") || end.equals("bmp")) {
+            intent = fileAccess.getImageFileIntent(filename);
+        } else if (end.equals("apk")) {
+            intent = fileAccess.getApkFileIntent(filename);
+        } else if (end.equals("ppt")) {
+            intent = fileAccess.getPptFileIntent(filename);
+        } else if (end.equals("xls")) {
+            intent = fileAccess.getExcelFileIntent(filename);
+        } else if (end.equals("doc")) {
+            intent = fileAccess.getWordFileIntent(filename);
+        } else if (end.equals("pdf")) {
+            intent = fileAccess.getPdfFileIntent(filename);
+        } else if (end.equals("chm")) {
+            intent = fileAccess.getChmFileIntent(filename);
+        } else if (end.equals("txt")) {
+            intent = fileAccess.getTextFileIntent(filename, false);
+        } else {
+            intent = fileAccess.getAllIntent(filename);
+        }
+        return intent;
     }
 
     /**

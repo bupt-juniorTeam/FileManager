@@ -1,5 +1,7 @@
 package com.BUPTJuniorTeam.filemanager.accessobject;
 
+import android.content.Intent;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public interface IAccessObject {
      * 选择合适的软件打开文件，如果是文件夹，则打开文件夹
      * @param filename 需要打开的文件名
      */
-    public void open(String filename);
+    public Intent open(String filename);
 
     /**
      * 该文件是否是一个目录
