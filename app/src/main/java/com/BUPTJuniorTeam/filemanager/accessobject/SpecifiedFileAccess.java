@@ -6,6 +6,7 @@ import android.net.Uri;
 import java.io.File;
 
 public  class SpecifiedFileAccess {
+    public SpecifiedFileAccess(){}
     // Android获取一个用于打开APK文件的intent
     public Intent getAllIntent(String param) {
         Intent intent = new Intent();

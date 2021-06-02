@@ -84,6 +84,26 @@ public class FileManagerService extends Service {
         fileListCallBack = callBack;
     }
 
+    public void delete(AccessType type, String filename){
+        AccessObjectFactory objectFactory = AccessObjectFactory.getInstance();
+        IAccessObject objectAccess = objectFactory.createAccessObject(type);
+        //如果是FTP类型就返回
+        if (type == AccessType.ACCESS_FTP) {
+            Toast.makeText(getApplicationContext(), "暂不支持FTP", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        boolean isSuccess = objectAccess.delete(filename);
+        if(isSuccess){
+            Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
+
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "删除失败", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
     /**
      * 列出目录下的文件列表
      *

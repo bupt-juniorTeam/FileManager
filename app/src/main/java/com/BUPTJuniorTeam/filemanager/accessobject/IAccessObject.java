@@ -3,13 +3,23 @@ package com.BUPTJuniorTeam.filemanager.accessobject;
 import android.content.Intent;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 统一文件操作接口
  */
 public interface IAccessObject {
+
+    /**
+     * 列出当前目录下的文件
+     * @param filename 当前文件名
+     * @return HashMap<String,String>，文件属性
+     */
+    public HashMap<String,String> getProperty(String filename);
     /**
      * 列出当前目录下的文件
      * @param path 当前目录路径
@@ -42,7 +52,7 @@ public interface IAccessObject {
      * @param filename 需要复制的文件名
      * @return FileInputStream，该文件的输入流
      */
-    public FileInputStream copy(String filename);
+    public FileInputStream copy(String filename) throws FileNotFoundException;
 
     /**
      * 获取粘贴目标文件的输出流
@@ -55,5 +65,5 @@ public interface IAccessObject {
      * 删除文件
      * @param path 需要删除的路径
      */
-    public void delete(String path);
+    public boolean delete(String path);
 }
