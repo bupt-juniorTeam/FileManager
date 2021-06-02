@@ -2,6 +2,7 @@ package com.BUPTJuniorTeam.filemanager.accessobject;
 
 import android.content.Intent;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -15,11 +16,17 @@ import java.util.Map;
 public interface IAccessObject {
 
     /**
+     * 创建文件
+     * @param filename
+     * @return FILE
+     */
+    public File createFile(String filename);
+    /**
      * 列出当前目录下的文件
      * @param filename 当前文件名
-     * @return HashMap<String,String>，文件属性
+     * @return FileProperty，文件属性
      */
-    public HashMap<String,String> getProperty(String filename);
+    public FileProperty getProperty(String filename);
     /**
      * 列出当前目录下的文件
      * @param path 当前目录路径
@@ -59,7 +66,7 @@ public interface IAccessObject {
      * @param filename 需要粘贴的目标文件名
      * @return FileOutputStream，该文件的输出流
      */
-    public FileOutputStream paste(String filename);
+    public FileOutputStream paste(String filename) throws FileNotFoundException;
 
     /**
      * 删除文件
