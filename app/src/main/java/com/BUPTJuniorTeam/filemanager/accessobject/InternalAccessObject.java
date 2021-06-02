@@ -21,7 +21,17 @@ public class InternalAccessObject implements IAccessObject {
     @Override
     public ArrayList<String> list(String path) {
         // TODO: 获取文件列表
-        return null;
+        File file=new File(path);
+        File[] files=file.listFiles();
+        //空目录
+        if(files==null){
+            return null;
+        }
+        ArrayList<String> s=new ArrayList<>();
+        for(int i=0;i<files.length;++i){
+            s.add(files[i].getName());
+        }
+        return s;
     }
 
    private SpecifiedFileAccess fileAccess;
@@ -33,7 +43,6 @@ public class InternalAccessObject implements IAccessObject {
      */
     @Override
     public Intent open(String filename) {
-        // TODO: 打开文件
         File file = new File(filename);
 
         if (!file.exists()) {

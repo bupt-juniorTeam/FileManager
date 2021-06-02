@@ -99,16 +99,20 @@ public class FileManagerService extends Service {
         final AccessType type1 = type;
         final String path1 = path;
         // TODO: 创建另一条线程，加载文件列表并通过回调函数返回值
-        Thread thread = new Thread() {
+        taskThread = new Thread() {
             @Override
             public void run() {
                 AccessObjectFactory objectFactory = AccessObjectFactory.getInstance();
                 IAccessObject object = objectFactory.createAccessObject(type1);
                 ArrayList<String> fileList = object.list(path1);
+                if(fileList==null){
+                    Toast.makeText(getApplicationContext(), "路径不存在", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 fileListCallBack.callback(fileList);
             }
         };
-        thread.start();
+        taskThread.start();
 
     }
 
@@ -119,7 +123,6 @@ public class FileManagerService extends Service {
      * @param filename 文件名
      */
     public void open(AccessType type, String filename) {
-        // TODO: 调用系统API打开文件，如果是路径则重新加载路径
         AccessObjectFactory objectFactory = AccessObjectFactory.getInstance();
         IAccessObject objectAccess = objectFactory.createAccessObject(type);
         //如果是FTP类型就返回
