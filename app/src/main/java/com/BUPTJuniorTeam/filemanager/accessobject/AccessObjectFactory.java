@@ -28,6 +28,8 @@ public class AccessObjectFactory {
         IAccessObject object = null;
         switch (type) {
             case ACCESS_FTP:
+                object = new FTPAccessObject();
+                break;
             case ACCESS_HISTORY:
             case ACCESS_EXTERNAL:
                 break;

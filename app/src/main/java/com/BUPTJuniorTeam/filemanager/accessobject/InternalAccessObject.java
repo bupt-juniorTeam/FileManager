@@ -1,19 +1,14 @@
 package com.BUPTJuniorTeam.filemanager.accessobject;
 
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
-import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
 
 public class InternalAccessObject implements IAccessObject {
     private SpecifiedFileAccess fileAccess;
@@ -96,12 +91,11 @@ return null;
      * 是否获取成功由上层调用函数判断
      */
     @Override
-    public FileInputStream copy(String filename) throws FileNotFoundException {
+    public InputStream copy(String filename) throws FileNotFoundException {
         File file = new File(filename);
         FileInputStream inputStream = new FileInputStream(file);
 
         return inputStream;
-
     }
 
     /**

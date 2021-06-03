@@ -1,14 +1,11 @@
 package com.BUPTJuniorTeam.filemanager.accessobject;
 
 import android.content.Intent;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 统一文件操作接口
@@ -59,14 +56,14 @@ public interface IAccessObject {
      * @param filename 需要复制的文件名
      * @return FileInputStream，该文件的输入流
      */
-    public FileInputStream copy(String filename) throws FileNotFoundException;
+    public InputStream copy(String filename) throws FileNotFoundException;
 
     /**
      * 获取粘贴目标文件的输出流
      * @param filename 需要粘贴的目标文件名
-     * @return FileOutputStream，该文件的输出流
+     * @return OutputStream，该文件的输出流
      */
-    public FileOutputStream paste(String filename) throws FileNotFoundException;
+    public OutputStream paste(String filename) throws FileNotFoundException;
 
     /**
      * 删除文件
