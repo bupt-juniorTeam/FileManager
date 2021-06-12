@@ -1,2 +1,3 @@
+include ':android-support-v4'
 include ':app'
 rootProject.name = "filemanager"

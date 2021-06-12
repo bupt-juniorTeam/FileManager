@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">File Manager</string>
+    <string name="left_list_view_internal">Internal Storage</string>
+    <string name="left_list_view_external">SD Card</string>
+    <string name="left_list_view_history">History</string>
+    <string name="left_list_view_preference">Preference</string>
 </resources>
