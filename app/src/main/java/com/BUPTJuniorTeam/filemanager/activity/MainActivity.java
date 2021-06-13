@@ -3,6 +3,7 @@ package com.BUPTJuniorTeam.filemanager.activity;
 import android.Manifest.permission;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +17,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.BUPTJuniorTeam.filemanager.R;
+import com.BUPTJuniorTeam.filemanager.task.CopyTask;
+import com.BUPTJuniorTeam.filemanager.task.DeleteTask;
 import com.BUPTJuniorTeam.filemanager.task.ListTask;
+import com.BUPTJuniorTeam.filemanager.task.MoveTask;
+import com.BUPTJuniorTeam.filemanager.utils.StorageLocation;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -133,6 +139,11 @@ public class MainActivity extends AppCompatActivity {
         loadViews();
         loadLeftListView();
         resetCurrentPath("Internal Storage");
+
+
+//        testCopyTask();
+//        testDeleteTask();
+//        testMoveTask();
     }
 
     @Override
@@ -145,5 +156,45 @@ public class MainActivity extends AppCompatActivity {
         else {
             resetCurrentPath("..");
         }
+    }
+
+    private void testCopyTask() {
+
+        // file INTERNAL TO INTERNAL success
+//        CopyTask copyTask2 = new CopyTask(this);
+//        copyTask2.execute(StorageLocation.INTERNAL + "/Podcasts/music.mp3", StorageLocation.INTERNAL + "/Music");
+
+        // file EXTERNAL TO EXTERNAL fail
+        CopyTask copyTask2 = new CopyTask(this);
+        copyTask2.execute(StorageLocation.EXTERNAL + "/MISC/IDX/idx00", StorageLocation.EXTERNAL + "/MISC/THM");
+
+        // file INTERNAL TO EXTERNAL fail
+//        CopyTask copyTask1 = new CopyTask(this);
+//        copyTask1.execute(StorageLocation.INTERNAL + "/Music/music.mp3", StorageLocation.EXTERNAL + "/MISC");
+
+
+        // Copy directory Test   internal to internal success
+//        CopyTask copyTask1 = new CopyTask(this);
+//        copyTask1.execute(StorageLocation.INTERNAL + "/Music", StorageLocation.INTERNAL + "/Podcasts");
+    }
+
+    private void testDeleteTask() {
+        // file INTERNAL success
+        new DeleteTask(this).execute(StorageLocation.INTERNAL + "/Music/music.mp3");
+
+        // file EXTERNAL fail
+//        new DeleteTask(this).execute(StorageLocation.EXTERNAL + "/MISC/THM");
+
+        // dir INTERNAL success
+//        new DeleteTask(this).execute(StorageLocation.INTERNAL + "/Music/Music");
+    }
+
+    private void testMoveTask() {
+
+        // file INTERNAL success
+//        new MoveTask(this).execute(StorageLocation.INTERNAL + "/Music/music.mp3", StorageLocation.INTERNAL + "/Podcasts/Music");
+
+        // dir INTERNAL success
+//        new MoveTask(this).execute(StorageLocation.INTERNAL + "/Podcasts/Music", StorageLocation.INTERNAL + "/Music");
     }
 }
