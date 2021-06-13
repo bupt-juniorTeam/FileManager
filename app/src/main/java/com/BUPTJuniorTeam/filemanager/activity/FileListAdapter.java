@@ -27,6 +27,11 @@ public class FileListAdapter extends ArrayAdapter<FileProperty> {
 
   private List<FileProperty> list = null;
   private Context context = null;
+  private static boolean open_only = false;
+
+  public static void setOpenOnly(boolean open) {
+    open_only = open;
+  }
 
   public FileListAdapter(@NonNull Context context, int resource,
       @NonNull List<FileProperty> objects) {
@@ -90,7 +95,9 @@ public class FileListAdapter extends ArrayAdapter<FileProperty> {
       convertView.setOnLongClickListener(new OnLongClickListener() {
         @Override
         public boolean onLongClick(View view) {
-          popMenu(view, property);
+          if (!open_only) {
+            popMenu(view, property);
+          }
           return true;
         }
       });
@@ -135,13 +142,13 @@ public class FileListAdapter extends ArrayAdapter<FileProperty> {
       public boolean onMenuItemClick(MenuItem menuItem) {
         String title = menuItem.getTitle().toString();
         if ("Copy".equals(title)) {
-
+          ((MainActivity)context).copyFile(property.getPath() + "/" + property.getName());
         }
         else if ("Move".equals(title)) {
-
+          ((MainActivity)context).moveFile(property.getPath() + "/" + property.getName());
         }
         else if ("Delete".equals(title)) {
-
+          ((MainActivity)context).removeFile(property.getPath() + "/" + property.getName());
         }
         else if ("Detail".equals(title)) {
           showDetailDialog(property);
