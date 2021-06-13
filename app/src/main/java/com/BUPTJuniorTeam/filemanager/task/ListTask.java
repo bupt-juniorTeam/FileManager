@@ -61,7 +61,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
     path = Environment.getExternalStorageDirectory().getAbsolutePath() + path.substring(first);
     File file = new File(path);
     File[] files = file.listFiles();
-    if (!"Internal Storage/".equals(str)) {
+    if (!(StorageLocation.INTERNAL + "/").equals(str)) {
       FileProperty property = new FileProperty();
       property.setName("..");
       long time = file.getParentFile().lastModified();
@@ -110,7 +110,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
     Log.d("TAG", path);
     File file = new File(path);
     File[] files = file.listFiles();
-    if (!"External Storage/".equals(str)) {
+    if (!(StorageLocation.EXTERNAL + "/").equals(str)) {
       FileProperty property = new FileProperty();
       property.setName("..");
       long time = file.getParentFile().lastModified();
