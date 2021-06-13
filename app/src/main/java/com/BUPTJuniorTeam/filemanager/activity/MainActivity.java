@@ -1,5 +1,6 @@
 package com.BUPTJuniorTeam.filemanager.activity;
 
+import android.Manifest.permission;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -13,8 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import com.BUPTJuniorTeam.filemanager.R;
 import com.BUPTJuniorTeam.filemanager.task.ListTask;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListTask listTask = null;
 
-    private void resetCurrentPath(String path) {
+    public void resetCurrentPath(String path) {
         if ("Internal Storage".equals(path)) {
             currentPath = "Internal Storage/";
         }
@@ -40,6 +43,15 @@ public class MainActivity extends AppCompatActivity {
         }
         else if ("History".equals(path)) {
             currentPath = "History/";
+        }
+        else if ("..".equals(path)) {
+            File file = new File(currentPath);
+            file = file.getParentFile();
+            path = file.getName() + "/";
+
+            String temp = currentPath.substring(0, currentPath.length() - 1);
+            int pos = temp.lastIndexOf('/');
+            currentPath = currentPath.substring(0, pos + 1);
         }
         else {
             currentPath += path;
@@ -107,14 +119,31 @@ public class MainActivity extends AppCompatActivity {
         listTask.execute(currentPath);
     }
 
+    private void getPermission() {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE}, 100);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getPermission();
 
         loadViews();
         loadLeftListView();
         resetCurrentPath("Internal Storage");
     }
 
+    @Override
+    public void onBackPressed() {
+        if ("Internal Storage/".equals(currentPath) ||
+            "External Storage/".equals(currentPath) ||
+            "History".equals(currentPath)) {
+            super.onBackPressed();
+        }
+        else {
+            resetCurrentPath("..");
+        }
+    }
 }

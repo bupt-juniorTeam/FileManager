@@ -1,8 +1,9 @@
 package com.BUPTJuniorTeam.filemanager.utils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-
+import android.support.v4.content.FileProvider;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -146,30 +147,30 @@ public class SpecifiedFileAccess {
   }
 
 
-  public Intent getIntent(String filename) {
+  public Intent getIntent(String filename, Context context) {
     Intent intent;
     if (isWordFileType(filename)) {
-      intent = getWordFileIntent(filename);
+      intent = getWordFileIntent(filename, context);
     } else if (isApkFileType(filename)) {
-      intent = getApkFileIntent(filename);
+      intent = getApkFileIntent(filename, context);
     } else if (isTxtFileType(filename)) {
-      intent = getTextFileIntent(filename,false);
+      intent = getTextFileIntent(filename,false, context);
     } else if (isChmFileType(filename)) {
-      intent = getChmFileIntent(filename);
+      intent = getChmFileIntent(filename, context);
     } else if (isPdfFileType(filename)) {
-      intent = getPdfFileIntent(filename);
+      intent = getPdfFileIntent(filename, context);
     } else if (isXlsFileType(filename)) {
-      intent = getExcelFileIntent(filename);
+      intent = getExcelFileIntent(filename, context);
     } else if (isAudioFileType(filename)) {
-      intent = getAudioFileIntent(filename);
+      intent = getAudioFileIntent(filename, context);
     } else if (isVideoFileType(filename)) {
-      intent = getVideoFileIntent(filename);
+      intent = getVideoFileIntent(filename, context);
     } else if (isImageFileType(filename)) {
-      intent = getImageFileIntent(filename);
+      intent = getImageFileIntent(filename, context);
     } else if (isPptFileType(filename)) {
-      intent = getPptFileIntent(filename);
+      intent = getPptFileIntent(filename, context);
     } else {
-      intent = getAllIntent(filename);
+      intent = getAllIntent(filename, context);
     }
     return intent;
   }
@@ -343,43 +344,47 @@ public class SpecifiedFileAccess {
 
 
   // Android获取一个用于打开APK文件的intent
-  private Intent getAllIntent(String param) {
+  private Intent getAllIntent(String param, Context context) {
     Intent intent = new Intent();
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.setAction(Intent.ACTION_VIEW);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "*/*");
     return intent;
   }
 
   // Android获取一个用于打开APK文件的intent
-  private Intent getApkFileIntent(String param) {
+  private Intent getApkFileIntent(String param, Context context) {
     Intent intent = new Intent();
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.setAction(Intent.ACTION_VIEW);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "application/vnd.android.package-archive");
     return intent;
   }
 
   // Android获取一个用于打开VIDEO文件的intent
-  private Intent getVideoFileIntent(String param) {
+  private Intent getVideoFileIntent(String param, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intent.putExtra("oneshot", 0);
     intent.putExtra("configchange", 0);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "video/*");
     return intent;
   }
 
   // Android获取一个用于打开AUDIO文件的intent
-  private Intent getAudioFileIntent(String param) {
+  private Intent getAudioFileIntent(String param, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intent.putExtra("oneshot", 0);
     intent.putExtra("configchange", 0);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "audio/*");
     return intent;
   }
@@ -388,81 +393,89 @@ public class SpecifiedFileAccess {
   private Intent getHtmlFileIntent(String param) {
     Uri uri = Uri.parse(param).buildUpon().encodedAuthority("com.android.htmlfileprovider").scheme("content").encodedPath(param).build();
     Intent intent = new Intent("android.intent.action.VIEW");
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     intent.setDataAndType(uri, "text/html");
     return intent;
   }
 
   // Android获取一个用于打开图片文件的intent
-  private Intent getImageFileIntent(String param) {
+  private Intent getImageFileIntent(String param, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addCategory("android.intent.category.DEFAULT");
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "image/*");
     return intent;
   }
 
   // Android获取一个用于打开PPT文件的intent
-  private Intent getPptFileIntent(String param) {
+  private Intent getPptFileIntent(String param, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addCategory("android.intent.category.DEFAULT");
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "application/vnd.ms-powerpoint");
     return intent;
   }
 
   // Android获取一个用于打开Excel文件的intent
-  private Intent getExcelFileIntent(String param) {
+  private Intent getExcelFileIntent(String param, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addCategory("android.intent.category.DEFAULT");
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "application/vnd.ms-excel");
     return intent;
   }
 
   // Android获取一个用于打开Word文件的intent
-  private Intent getWordFileIntent(String param) {
+  private Intent getWordFileIntent(String param, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addCategory("android.intent.category.DEFAULT");
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "application/msword");
     return intent;
   }
 
   // Android获取一个用于打开CHM文件的intent
-  private Intent getChmFileIntent(String param) {
+  private Intent getChmFileIntent(String param, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addCategory("android.intent.category.DEFAULT");
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "application/x-chm");
     return intent;
   }
 
   // Android获取一个用于打开文本文件的intent
-  private Intent getTextFileIntent(String param, boolean paramBoolean) {
+  private Intent getTextFileIntent(String param, boolean paramBoolean, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addCategory("android.intent.category.DEFAULT");
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     if (paramBoolean) {
-      Uri uri1 = Uri.parse(param);
+      Uri uri1 = FileProvider.getUriForFile(context, "filemanager", new File(param));;
       intent.setDataAndType(uri1, "text/plain");
     } else {
-      Uri uri2 = Uri.fromFile(new File(param));
+      Uri uri2 = FileProvider.getUriForFile(context, "filemanager", new File(param));;;
       intent.setDataAndType(uri2, "text/plain");
     }
     return intent;
   }
 
   // Android获取一个用于打开PDF文件的intent
-  private Intent getPdfFileIntent(String param) {
+  private Intent getPdfFileIntent(String param, Context context) {
     Intent intent = new Intent("android.intent.action.VIEW");
     intent.addCategory("android.intent.category.DEFAULT");
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    Uri uri = Uri.fromFile(new File(param));
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    Uri uri = FileProvider.getUriForFile(context, "filemanager", new File(param));
     intent.setDataAndType(uri, "application/pdf");
     return intent;
   }

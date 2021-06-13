@@ -36,21 +36,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
       path = Environment.getExternalStorageDirectory().getAbsolutePath() + path.substring(first);
       File file = new File(path);
       File[] files = file.listFiles();
-      if (files != null) {
-        for (File f : files) {
-          FileProperty property = new FileProperty();
-          property.setName(f.getName());
-          long time = f.lastModified();
-          @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-          String string_time = formatter.format(time);
-          property.setModified_time(string_time);
-          property.setPath(file.getPath());
-          property.setSize(file.length());
-          String file_type = fileAccess.getFileMemeType(f.getName());
-          property.setType(file_type);
-          fileProperties.add(property);
-        }
-
+      if (!"Internal Storage/".equals(strings[0])) {
         FileProperty property = new FileProperty();
         property.setName("..");
         long time = file.getParentFile().lastModified();
@@ -62,6 +48,23 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
         String file_type = fileAccess.getFileMemeType(file.getParent());
         property.setType(file_type);
         fileProperties.add(property);
+      }
+
+      if (files != null) {
+        for (File f : files) {
+          FileProperty property = new FileProperty();
+          property = new FileProperty();
+          property.setName(f.getName());
+          long time = file.getParentFile().lastModified();
+          @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          String string_time = formatter.format(time);
+          property.setModified_time(string_time);
+          property.setPath(file.getPath());
+          property.setSize(file.length());
+          String file_type = fileAccess.getFileMemeType(f.getName());
+          property.setType(file_type);
+          fileProperties.add(property);
+        }
       }
     }
     else if ("External Storage".equals(type)) {

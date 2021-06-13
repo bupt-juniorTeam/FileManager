@@ -4,4 +4,8 @@
     <string name="left_list_view_external">SD Card</string>
     <string name="left_list_view_history">History</string>
     <string name="left_list_view_preference">Preference</string>
+  <string name="action_menu_copy">Copy</string>
+    <string name="action_menu_move">Move</string>
+    <string name="action_menu_delete">Delete</string>
+    <string name="action_menu_detail">Detail</string>
 </resources>
