@@ -13,7 +13,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@color/colorPrimary"
-      android:id="@+id/action_bar">
+      android:id="@+id/action_bar"
+      android:orientation="horizontal">
       <ImageButton
         android:id="@+id/menu_button"
         android:layout_width="wrap_content"
@@ -28,6 +29,20 @@
         android:textColor="@color/colorFront"
         android:textSize="20dp"
         android:layout_gravity="center"/>
+
+      <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right">
+        <ImageButton
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/menu_done"
+          android:src="@mipmap/ic_done"
+          android:visibility="invisible"/>
+      </LinearLayout>
+
     </LinearLayout>
     <ListView
       android:layout_width="match_parent"

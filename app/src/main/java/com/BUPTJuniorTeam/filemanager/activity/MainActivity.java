@@ -1,6 +1,9 @@
 package com.BUPTJuniorTeam.filemanager.activity;
 
 import android.Manifest.permission;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,7 +40,17 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout = null;
     private LinearLayout leftLayout = null;
     private TextView pathLabel = null;
+    private ImageButton doneButton = null;
+    private ProgressDialog dialog = null;
+
     private String currentPath = "Internal Storage";
+
+    private enum TransferType {
+        TRANSFER_TYPE_MOVE,
+        TRANSFER_TYPE_COPY
+    };
+
+    private TransferType transferType;
 
     private ListTask listTask = null;
 
@@ -50,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if ("History".equals(path)) {
             currentPath = "History/";
+            FileListAdapter.setOpenOnly(true);
         }
         else if ("..".equals(path)) {
             File file = new File(currentPath);
@@ -75,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         leftLayout = (LinearLayout) findViewById(R.id.left);
         pathLabel = (TextView) findViewById(R.id.path_label);
         listView2 = (ListView) findViewById(R.id.main_list);
+        doneButton = (ImageButton) findViewById(R.id.menu_done);
     }
 
     private void loadLeftListView() {
@@ -149,6 +164,25 @@ public class MainActivity extends AppCompatActivity {
 //        testCopyTask();
 //        testDeleteTask();
 //        testMoveTask();
+        doneButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog = new ProgressDialog(MainActivity.this);
+                dialog.setProgress(0);
+                dialog.setTitle("正在执行...");
+                dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                dialog.setMax(100);
+                dialog.setCancelable(false);
+                dialog.show();
+
+                if (transferType == TransferType.TRANSFER_TYPE_COPY) {
+                    // TODO:
+                }
+                else if (transferType == TransferType.TRANSFER_TYPE_MOVE) {
+                    // TODO:
+                }
+            }
+        });
     }
 
     @Override
@@ -163,9 +197,47 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void copyFile(String from) {
+        FileListAdapter.setOpenOnly(true);
+        doneButton.setVisibility(View.VISIBLE);
+        transferType = TransferType.TRANSFER_TYPE_COPY;
+    }
 
+    public void moveFile(String from) {
+        FileListAdapter.setOpenOnly(true);
+        doneButton.setVisibility(View.VISIBLE);
+        transferType = TransferType.TRANSFER_TYPE_MOVE;
+    }
 
+    public void removeFile(String filename) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setIcon(R.mipmap.ic_about);
+        builder.setTitle("确定删除？");
+        builder.setMessage("确定删除文件" + filename + "吗？");
 
+        builder.setNegativeButton("关闭", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
 
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // TODO:
+            }
+        });
 
+        builder.show();
+    }
+
+    public void finishTask() {
+        FileListAdapter.setOpenOnly(false);
+        doneButton.setVisibility(View.INVISIBLE);
+    }
+
+    public void setTransferProgress(int progress) {
+        dialog.setProgress(progress);
+    }
 }
