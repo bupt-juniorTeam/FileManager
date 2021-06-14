@@ -44,7 +44,7 @@ public class CopyTask extends AsyncTask<String, String, Boolean> {
 
         if (targetType.equals(StorageLocation.INTERNAL)) {
             target = Environment.getExternalStorageDirectory().getAbsolutePath() + target.substring(target.indexOf("/"));
-        } else if (sourceType.equals(StorageLocation.EXTERNAL)) {
+        } else if (targetType.equals(StorageLocation.EXTERNAL)) {
             String sdCardRoot = SDCardUtils.getExternalSDCards(context);
             target = sdCardRoot + target.substring(target.indexOf("/"));
         }

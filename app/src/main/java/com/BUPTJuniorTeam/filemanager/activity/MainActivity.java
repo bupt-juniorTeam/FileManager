@@ -3,6 +3,7 @@ package com.BUPTJuniorTeam.filemanager.activity;
 import android.Manifest.permission;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -126,7 +127,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getPermission() {
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE}, 100);
+//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE, permission.MEDIA_CONTENT_CONTROL, permission.ACCESS_MEDIA_LOCATION}, 100);
+        if (!Environment.isExternalStorageManager()) {
+              Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+              startActivity(intent);
+        }
     }
 
     @Override
@@ -158,43 +163,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void testCopyTask() {
-
-        // file INTERNAL TO INTERNAL success
-//        CopyTask copyTask2 = new CopyTask(this);
-//        copyTask2.execute(StorageLocation.INTERNAL + "/Podcasts/music.mp3", StorageLocation.INTERNAL + "/Music");
-
-        // file EXTERNAL TO EXTERNAL fail
-        CopyTask copyTask2 = new CopyTask(this);
-        copyTask2.execute(StorageLocation.EXTERNAL + "/MISC/IDX/idx00", StorageLocation.EXTERNAL + "/MISC/THM");
-
-        // file INTERNAL TO EXTERNAL fail
-//        CopyTask copyTask1 = new CopyTask(this);
-//        copyTask1.execute(StorageLocation.INTERNAL + "/Music/music.mp3", StorageLocation.EXTERNAL + "/MISC");
 
 
-        // Copy directory Test   internal to internal success
-//        CopyTask copyTask1 = new CopyTask(this);
-//        copyTask1.execute(StorageLocation.INTERNAL + "/Music", StorageLocation.INTERNAL + "/Podcasts");
-    }
 
-    private void testDeleteTask() {
-        // file INTERNAL success
-        new DeleteTask(this).execute(StorageLocation.INTERNAL + "/Music/music.mp3");
 
-        // file EXTERNAL fail
-//        new DeleteTask(this).execute(StorageLocation.EXTERNAL + "/MISC/THM");
 
-        // dir INTERNAL success
-//        new DeleteTask(this).execute(StorageLocation.INTERNAL + "/Music/Music");
-    }
-
-    private void testMoveTask() {
-
-        // file INTERNAL success
-//        new MoveTask(this).execute(StorageLocation.INTERNAL + "/Music/music.mp3", StorageLocation.INTERNAL + "/Podcasts/Music");
-
-        // dir INTERNAL success
-//        new MoveTask(this).execute(StorageLocation.INTERNAL + "/Podcasts/Music", StorageLocation.INTERNAL + "/Music");
-    }
 }
