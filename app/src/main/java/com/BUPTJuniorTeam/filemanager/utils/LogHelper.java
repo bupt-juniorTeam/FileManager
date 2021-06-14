@@ -17,34 +17,39 @@ public class LogHelper {
         this.file = f;
     }
 
-    public void writeLog(String string) throws IOException {
+    public void writeLog(String string) {
         if (file == null)
             file = new File("history.log");
-        FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
 
-        bufferedWriter.write(string + "\n");
+            bufferedWriter.write(string + "\n");
 
-        bufferedWriter.close();
+            bufferedWriter.close();
+        } catch (IOException e) { }
     }
 
-    public ArrayList<FileProperty> readLog() throws IOException {
+    public ArrayList<FileProperty> readLog(){
+        ArrayList<FileProperty> fileProperties = new ArrayList<>();
+
         if (file == null)
             file = new File("history.log");
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String string;
+            ArrayList<String> his = new ArrayList<>();
+            while ((string = bufferedReader.readLine()) != null) {
+                his.add(string);
+            }
 
-        ArrayList<String> his = new ArrayList<>();
-        String string;
-        while ((string = bufferedReader.readLine()) != null) {
-            his.add(string);
-        }
+            for (int i = his.size() - 1; Math.max(his.size() - 10, 0) <= i; i--) {
+                fileProperties.add(new FileProperty(his.get(i)));
+            }
 
-        ArrayList<FileProperty> fileProperties = new ArrayList<>();
-        for (int i = his.size()-1; Math.max(his.size()-10, 0) <= i; i-- ) {
-            fileProperties.add(new FileProperty(his.get(i)));
-        }
+            bufferedReader.close();
+        } catch (IOException e) { }
 
-        bufferedReader.close();
         return fileProperties;
     }
 
