@@ -4,6 +4,16 @@ public class FileProperty {
   public FileProperty() {
   }
 
+  public FileProperty(String str) {
+    String[] info = str.split(" ");
+    this.name = info[0];
+    this.modified_time = info[1];
+    this.size = Long.parseLong(info[2]);
+    this.path = info[3];
+    this.type = info[4];
+    this.relativePath = info[5];
+  }
+
   private String name;
   private String modified_time;
   private long size; //单位是字节
