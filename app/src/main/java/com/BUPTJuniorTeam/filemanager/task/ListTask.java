@@ -40,7 +40,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
         return getExternalList(strings[0]);
     }
     else if (StorageLocation.HISTORY.equals(type)) {
-
+      // TODO:
     }
     return new ArrayList<>();
   }
@@ -70,6 +70,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
       property.setModified_time(string_time);
       property.setPath(file.getParent());
       property.setSize(file.length());
+      property.setRelativePath(str);
       String file_type = fileAccess.getFileMemeType(file.getParent());
       property.setType(file_type);
       fileProperties.add(property);
@@ -86,6 +87,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
         property.setModified_time(string_time);
         property.setPath(file.getPath());
         property.setSize(file.length());
+        property.setRelativePath(str);
         String file_type = fileAccess.getFileMemeType(f.getName());
         property.setType(file_type);
         fileProperties.add(property);
@@ -103,7 +105,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
     String sdCardRoot = SDCardUtils.getExternalSDCards(context);
     // 无SDCard
     if (sdCardRoot == null)
-        return null;
+        return new ArrayList<>();
 
 
     path = sdCardRoot + path.substring(first);
@@ -119,6 +121,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
       property.setModified_time(string_time);
       property.setPath(file.getParent());
       property.setSize(file.length());
+      property.setRelativePath(str);
       String file_type = fileAccess.getFileMemeType(file.getParent());
       property.setType(file_type);
       fileProperties.add(property);
@@ -135,6 +138,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
         property.setModified_time(string_time);
         property.setPath(file.getPath());
         property.setSize(file.length());
+        property.setRelativePath(str);
         String file_type = fileAccess.getFileMemeType(f.getName());
         property.setType(file_type);
         fileProperties.add(property);

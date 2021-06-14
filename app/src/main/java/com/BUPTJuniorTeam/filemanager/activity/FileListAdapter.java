@@ -142,13 +142,13 @@ public class FileListAdapter extends ArrayAdapter<FileProperty> {
       public boolean onMenuItemClick(MenuItem menuItem) {
         String title = menuItem.getTitle().toString();
         if ("Copy".equals(title)) {
-          ((MainActivity)context).copyFile(property.getPath() + "/" + property.getName());
+          ((MainActivity)context).copyFile(property.getRelativePath() + property.getName());
         }
         else if ("Move".equals(title)) {
-          ((MainActivity)context).moveFile(property.getPath() + "/" + property.getName());
+          ((MainActivity)context).moveFile(property.getRelativePath() + property.getName());
         }
         else if ("Delete".equals(title)) {
-          ((MainActivity)context).removeFile(property.getPath() + "/" + property.getName());
+          ((MainActivity)context).removeFile(property.getRelativePath() + property.getName());
         }
         else if ("Detail".equals(title)) {
           showDetailDialog(property);

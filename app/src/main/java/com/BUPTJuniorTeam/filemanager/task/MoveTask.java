@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 
+import com.BUPTJuniorTeam.filemanager.activity.MainActivity;
 import com.BUPTJuniorTeam.filemanager.utils.FileOperation;
 import com.BUPTJuniorTeam.filemanager.utils.SDCardUtils;
 import com.BUPTJuniorTeam.filemanager.utils.StorageLocation;
@@ -54,7 +55,7 @@ public class MoveTask extends AsyncTask<String, String, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        return;
+        ((MainActivity)context).finishTask();
     }
 
 }
