@@ -64,30 +64,30 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="150px"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="开启黑夜模式"
-                android:id="@+id/text"
-                android:layout_marginTop="50px"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            <androidx.appcompat.widget.AppCompatToggleButton
-                android:layout_marginLeft="100px"
-                android:layout_marginTop="40px"
-                android:layout_width="300px"
-                android:layout_height="100px"
-                android:id="@+id/darkMode">
+<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="150px"-->
+<!--            android:orientation="horizontal">-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="开启黑夜模式"-->
+<!--                android:id="@+id/text"-->
+<!--                android:layout_marginTop="50px"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                app:layout_constraintRight_toRightOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+<!--            <androidx.appcompat.widget.AppCompatToggleButton-->
+<!--                android:layout_marginLeft="100px"-->
+<!--                android:layout_marginTop="40px"-->
+<!--                android:layout_width="300px"-->
+<!--                android:layout_height="100px"-->
+<!--                android:id="@+id/darkMode">-->
 
-            </androidx.appcompat.widget.AppCompatToggleButton>
+<!--            </androidx.appcompat.widget.AppCompatToggleButton>-->
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+<!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
 
 
 
@@ -144,7 +144,8 @@
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/font_size">
             <RadioButton android:id="@+id/radio_B"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

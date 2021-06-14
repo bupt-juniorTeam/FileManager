@@ -7,14 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 import com.BUPTJuniorTeam.filemanager.R;
 import com.cxyzy.colorpickerbar.ColorPickerBar;
-
 
 
 public class PreferenceActivity extends AppCompatActivity {
@@ -26,6 +25,7 @@ public class PreferenceActivity extends AppCompatActivity {
   private ImageView img3 = null;
   private ToggleButton darkModeToggle = null;
   private Button button = null;
+  private RadioGroup group = null;
 
   private String[] arrayForColor={"#D71345", "#BED742", "#4E72B8", "#9B95C9", "#45B97C"};
 
@@ -60,8 +60,19 @@ public class PreferenceActivity extends AppCompatActivity {
     img1=(ImageView)findViewById(R.id.img1);
     img2=(ImageView)findViewById(R.id.img2);
     img3=(ImageView)findViewById(R.id.img3);
-    darkModeToggle=(ToggleButton)findViewById(R.id.darkMode);
+//    darkModeToggle=(ToggleButton)findViewById(R.id.darkMode);
     button = (Button) findViewById(R.id.pref_done);
+    group = (RadioGroup) findViewById(R.id.font_size);
+  }
+
+  private int getColorIndex(String s) {
+    for (int i = 0; i < arrayForColor.length; i++) {
+      if (arrayForColor[i].equals(s)) {
+        return i;
+      }
+    }
+
+    return 0;
   }
 
 
@@ -87,12 +98,23 @@ public class PreferenceActivity extends AppCompatActivity {
       }
     });
 
+    int font_size = preferences.getInt("fontSize", 16);
+    if (font_size == 18) {
+      group.check(R.id.radio_B);
+    }
+    else if (font_size == 12) {
+      group.check(R.id.radio_S);
+    }
+    else {
+      group.check(R.id.radio_M);
+    }
+
     //进行背景颜色的设置，背景key为backgroundColor,默认颜色为#FFFFFF
     String backgroundColor=preferences.getString("backgroundColor","#FFFFFF");
-//    ColorPicker1.selectItem(Arrays.binarySearch(arrayForColor,backgroundColor));
+    ColorPicker1.selectItem(getColorIndex(backgroundColor));
     ColorPicker1.setColorPickerClickListener((ColorPickerBar.ColorPickerClickListener)(new ColorPickerBar.ColorPickerClickListener() {
       public void onClick(int selectedColor) {
-        String hexColor = String.format("#%06X", 0xFFFFFF | selectedColor);
+        String hexColor = String.format("#%06X", 0xFFFFFF & selectedColor);
         SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
         preferences.edit().putString("backgroundColor", hexColor).apply();;
 //        prefs.edit().putString("backgroundColor",hexColor);
@@ -103,10 +125,10 @@ public class PreferenceActivity extends AppCompatActivity {
 
     //进行字体颜色的设置，背景key为fontColor,默认颜色为#FFFFFF
     String fontColor=preferences.getString("fontColor","#FFFFFF");
-//    ColorPicker2.selectItem(Arrays.binarySearch(arrayForColor,fontColor));
+    ColorPicker2.selectItem(getColorIndex(fontColor));
     ColorPicker2.setColorPickerClickListener((ColorPickerBar.ColorPickerClickListener)(new ColorPickerBar.ColorPickerClickListener() {
       public void onClick(int selectedColor) {
-        String hexColor = String.format("#%06X", 0xFFFFFF | selectedColor);
+        String hexColor = String.format("#%06X", 0xFFFFFF & selectedColor);
         SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
         preferences.edit().putString("fontColor", hexColor).apply();
 //        prefs.edit().putString("fontColor",hexColor);
@@ -114,6 +136,7 @@ public class PreferenceActivity extends AppCompatActivity {
         //将颜色（第二个）改变的操作写在此处
       }
     }));
+
 
     img1.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -144,18 +167,18 @@ public class PreferenceActivity extends AppCompatActivity {
         }
       }
     );
-    darkModeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
-        if (isChecked) {
-          // The toggle is enabled
-          preferences.edit().putBoolean("dark", true).apply();;
-        } else {
-          // The toggle is disabled
-          preferences.edit().putBoolean("dark", false).apply();;
-        }
-      }
-    });
+//    darkModeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//        SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+//        if (isChecked) {
+//          // The toggle is enabled
+//          preferences.edit().putBoolean("dark", true).apply();;
+//        } else {
+//          // The toggle is disabled
+//          preferences.edit().putBoolean("dark", false).apply();;
+//        }
+//      }
+//    });
   }
 }
 
