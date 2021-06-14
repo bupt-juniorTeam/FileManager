@@ -5,7 +5,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +23,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.BUPTJuniorTeam.filemanager.R;
+import com.BUPTJuniorTeam.filemanager.task.CopyTask;
+import com.BUPTJuniorTeam.filemanager.task.DeleteTask;
 import com.BUPTJuniorTeam.filemanager.task.ListTask;
+import com.BUPTJuniorTeam.filemanager.task.MoveTask;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -37,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog dialog = null;
 
     private String currentPath = "Internal Storage";
+    private String fromPath = "";
 
     private enum TransferType {
         TRANSFER_TYPE_MOVE,
@@ -46,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private TransferType transferType;
 
     private ListTask listTask = null;
+    private CopyTask copyTask = null;
+    private DeleteTask deleteTask = null;
+    private MoveTask moveTask = null;
 
     public void resetCurrentPath(String path) {
         if ("Internal Storage".equals(path)) {
@@ -135,7 +146,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getPermission() {
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE}, 100);
+//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE, permission.MEDIA_CONTENT_CONTROL, permission.ACCESS_MEDIA_LOCATION}, 100);
+        if (VERSION.SDK_INT >= VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                  Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                  startActivity(intent);
+            }
+        }
+        else {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE, permission.MEDIA_CONTENT_CONTROL, permission.ACCESS_MEDIA_LOCATION}, 100);
+        }
     }
 
     @Override
@@ -153,18 +173,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog = new ProgressDialog(MainActivity.this);
-                dialog.setProgress(0);
                 dialog.setTitle("正在执行...");
-                dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                dialog.setMax(100);
+                dialog.setIndeterminate(true);
                 dialog.setCancelable(false);
                 dialog.show();
 
                 if (transferType == TransferType.TRANSFER_TYPE_COPY) {
-                    // TODO:
+                    copyTask = new CopyTask(MainActivity.this);
+                    copyTask.execute(fromPath, currentPath);
                 }
                 else if (transferType == TransferType.TRANSFER_TYPE_MOVE) {
-                    // TODO:
+                    moveTask = new MoveTask(MainActivity.this);
+                    moveTask.execute(fromPath, currentPath);
                 }
             }
         });
@@ -186,15 +206,17 @@ public class MainActivity extends AppCompatActivity {
         FileListAdapter.setOpenOnly(true);
         doneButton.setVisibility(View.VISIBLE);
         transferType = TransferType.TRANSFER_TYPE_COPY;
+        fromPath = from;
     }
 
     public void moveFile(String from) {
         FileListAdapter.setOpenOnly(true);
         doneButton.setVisibility(View.VISIBLE);
         transferType = TransferType.TRANSFER_TYPE_MOVE;
+        fromPath = from;
     }
 
-    public void removeFile(String filename) {
+    public void removeFile(final String filename) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setIcon(R.mipmap.ic_about);
         builder.setTitle("确定删除？");
@@ -210,7 +232,14 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                // TODO:
+                deleteTask = new DeleteTask(MainActivity.this);
+                deleteTask.execute(filename);
+
+                dialog = new ProgressDialog(MainActivity.this);
+                dialog.setTitle("正在执行...");
+                dialog.setIndeterminate(true);
+                dialog.setCancelable(false);
+                dialog.show();
             }
         });
 
@@ -220,9 +249,7 @@ public class MainActivity extends AppCompatActivity {
     public void finishTask() {
         FileListAdapter.setOpenOnly(false);
         doneButton.setVisibility(View.INVISIBLE);
-    }
-
-    public void setTransferProgress(int progress) {
-        dialog.setProgress(progress);
+        dialog.hide();
+        loadMainListView();
     }
 }

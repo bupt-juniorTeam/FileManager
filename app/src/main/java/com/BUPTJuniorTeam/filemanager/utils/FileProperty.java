@@ -9,6 +9,7 @@ public class FileProperty {
   private long size; //单位是字节
   private String path;
   private String type;
+  private String relativePath;
 
   public void setName(String name) {
     this.name = name;
@@ -49,4 +50,7 @@ public class FileProperty {
   public String getName() {
     return name;
   }
+
+  public void setRelativePath(String path) { relativePath = path; }
+  public String getRelativePath() {return relativePath;}
 }
