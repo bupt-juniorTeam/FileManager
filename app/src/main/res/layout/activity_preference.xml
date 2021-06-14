@@ -1,9 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context=".activity.PreferenceActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_layout"
+       >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:id="@+id/action_bar"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title"
+                android:textColor="@color/colorFront"
+                android:layout_marginLeft="30px"
+                android:textSize="20dp"
+                android:layout_gravity="center"
+                android:text="设置"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right">
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/menu_done"
+                    android:src="@mipmap/ic_done"
+                    android:visibility="invisible"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_marginTop="180px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="30px"
+        android:id="@+id/layout1">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="欢迎进入设置页面"
+            android:id="@+id/titleText"
+            android:layout_marginTop="50px"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="150px"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="开启黑夜模式"
+                android:id="@+id/text"
+                android:layout_marginTop="50px"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.appcompat.widget.AppCompatToggleButton
+                android:layout_marginLeft="100px"
+                android:layout_marginTop="40px"
+                android:layout_width="300px"
+                android:layout_height="100px"
+                android:id="@+id/darkMode">
+
+            </androidx.appcompat.widget.AppCompatToggleButton>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请进行背景颜色的设置"
+            android:id="@+id/text1"
+            android:layout_marginTop="50px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.cxyzy.colorpickerbar.ColorPickerBar
+            android:id="@+id/colorPickerBar1"
+            android:layout_marginTop="10px"
+            android:layout_marginLeft="10px"
+            android:layout_width="400dp"
+            android:layout_height="50dp"
+            />
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请进行字体颜色的设置"
+            android:id="@+id/text2"
+            android:layout_marginTop="50px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.cxyzy.colorpickerbar.ColorPickerBar
+            android:id="@+id/colorPickerBar2"
+            android:layout_marginTop="10px"
+            android:layout_marginLeft="10px"
+            android:layout_width="400dp"
+            android:layout_height="50dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请进行字体大小"
+            android:id="@+id/text3"
+            android:layout_marginTop="20px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton android:id="@+id/radio_B"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="大"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_M"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="中"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_S"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小"
+                android:onClick="onRadioButtonClicked"/>
+        </RadioGroup>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请进行文件夹图标的设置"
+            android:id="@+id/text4"
+            android:layout_marginTop="50px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200px"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@mipmap/ic_folder"
+                android:id="@+id/img1"
+                />
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@mipmap/ic_folder_2"
+                android:id="@+id/img2"
+                />
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@mipmap/ic_folder_3"
+                android:id="@+id/img3"
+                />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="500px"
+            android:layout_height="100px"
+            android:layout_marginTop="50px"
+            android:layout_marginLeft="240px"
+            android:text="确定">
+
+        </Button>
+
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
