@@ -10,8 +10,16 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class LogHelper {
+    private File file;
+
+    public LogHelper() {}
+    public LogHelper(File f) {
+        this.file = f;
+    }
+
     public void writeLog(String string) throws IOException {
-        File file = new File("history.log");
+        if (file == null)
+            file = new File("history.log");
         FileOutputStream fileOutputStream = new FileOutputStream(file, true);
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
 
@@ -21,7 +29,8 @@ public class LogHelper {
     }
 
     public ArrayList<FileProperty> readLog() throws IOException {
-        File file = new File("history.log");
+        if (file == null)
+            file = new File("history.log");
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
         ArrayList<String> his = new ArrayList<>();
@@ -38,4 +47,6 @@ public class LogHelper {
         bufferedReader.close();
         return fileProperties;
     }
+
+    public void finish() { }
 }
