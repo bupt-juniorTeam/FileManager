@@ -103,7 +103,7 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
     String sdCardRoot = SDCardUtils.getExternalSDCards(context);
     // 无SDCard
     if (sdCardRoot == null)
-        return null;
+        return fileProperties;
 
 
     path = sdCardRoot + path.substring(first);
