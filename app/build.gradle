@@ -27,6 +27,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     //noinspection GradlePath
     implementation files('libs/android-support-v4.jar')
+    implementation files('libs/RootTools.jar')
     testImplementation 'junit:junit:4.12'
     implementation 'com.gitee.cxyzy1:colorPickerBar:1.0.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
