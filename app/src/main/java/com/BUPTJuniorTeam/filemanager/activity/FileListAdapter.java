@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +62,10 @@ public class FileListAdapter extends ArrayAdapter<FileProperty> {
     else {
       holder = (ViewHolder) convertView.getTag();
     }
+
+    convertView.setBackgroundColor(Color.parseColor(((MainActivity)context).getBackgroundColor()));
+    holder.caption.setTextColor(Color.parseColor(((MainActivity)context).getFrontColor()));
+    holder.caption.setTextSize(TypedValue.COMPLEX_UNIT_DIP, ((MainActivity)context).getFontSize());
 
     final FileProperty property = list.get(position);
     if (property != null) {
@@ -123,7 +129,8 @@ public class FileListAdapter extends ArrayAdapter<FileProperty> {
       else {
         File file = new File(property.getPath() + "/" + property.getName());
         if (file.isDirectory()) {
-          holder.icon.setImageResource(R.mipmap.ic_folder);
+          int icon = ((MainActivity)context).getFoldIcon();
+          holder.icon.setImageResource(icon);
         }
         else {
           holder.icon.setImageResource(R.mipmap.ic_wtf);

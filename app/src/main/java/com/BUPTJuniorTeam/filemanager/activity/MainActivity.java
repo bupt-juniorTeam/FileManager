@@ -3,8 +3,10 @@ package com.BUPTJuniorTeam.filemanager.activity;
 import android.Manifest.permission;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -146,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getPermission() {
-//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE, permission.MEDIA_CONTENT_CONTROL, permission.ACCESS_MEDIA_LOCATION}, 100);
         if (VERSION.SDK_INT >= VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                   Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
@@ -251,5 +252,25 @@ public class MainActivity extends AppCompatActivity {
         doneButton.setVisibility(View.INVISIBLE);
         dialog.hide();
         loadMainListView();
+    }
+
+    public int getFoldIcon() {
+        SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+        return preferences.getInt("icon", R.mipmap.ic_folder);
+    }
+
+    public String getFrontColor() {
+        SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+        return preferences.getString("fontColor", "#000000");
+    }
+
+    public String getBackgroundColor() {
+        SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+        return preferences.getString("backgroundColor","#FFFFFF");
+    }
+
+    public int getFontSize() {
+        SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
+        return preferences.getInt("fontSize",18);
     }
 }

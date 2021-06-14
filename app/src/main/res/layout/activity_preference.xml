@@ -204,7 +204,8 @@
             android:layout_height="100px"
             android:layout_marginTop="50px"
             android:layout_marginLeft="240px"
-            android:text="确定">
+            android:text="确定"
+            android:id="@+id/pref_done">
 
         </Button>
 
