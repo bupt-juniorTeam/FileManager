@@ -9,6 +9,7 @@ import android.widget.ListView;
 import com.BUPTJuniorTeam.filemanager.R;
 import com.BUPTJuniorTeam.filemanager.activity.FileListAdapter;
 import com.BUPTJuniorTeam.filemanager.utils.FileProperty;
+import com.BUPTJuniorTeam.filemanager.utils.HistoryManager;
 import com.BUPTJuniorTeam.filemanager.utils.SDCardUtils;
 import com.BUPTJuniorTeam.filemanager.utils.SpecifiedFileAccess;
 import com.BUPTJuniorTeam.filemanager.utils.StorageLocation;
@@ -40,7 +41,8 @@ public class ListTask extends AsyncTask<String, String, ArrayList<FileProperty>>
         return getExternalList(strings[0]);
     }
     else if (StorageLocation.HISTORY.equals(type)) {
-      // TODO:
+      HistoryManager manager = HistoryManager.getInstance(context);
+      return manager.getHistoryList();
     }
     return new ArrayList<>();
   }

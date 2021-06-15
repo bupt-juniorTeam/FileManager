@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.BUPTJuniorTeam.filemanager.R;
@@ -29,6 +30,7 @@ import com.BUPTJuniorTeam.filemanager.task.CopyTask;
 import com.BUPTJuniorTeam.filemanager.task.DeleteTask;
 import com.BUPTJuniorTeam.filemanager.task.ListTask;
 import com.BUPTJuniorTeam.filemanager.task.MoveTask;
+import com.BUPTJuniorTeam.filemanager.task.ZipTask;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -59,13 +61,16 @@ public class MainActivity extends AppCompatActivity {
     private CopyTask copyTask = null;
     private DeleteTask deleteTask = null;
     private MoveTask moveTask = null;
+    private ZipTask zipTask = null;
 
     public void resetCurrentPath(String path) {
         if ("Internal Storage".equals(path)) {
             currentPath = "Internal Storage/";
+            FileListAdapter.setOpenOnly(false);
         }
         else if ("External Storage".equals(path)) {
             currentPath = "External Storage/";
+            FileListAdapter.setOpenOnly(false);
         }
         else if ("History".equals(path)) {
             currentPath = "History/";
@@ -85,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         pathLabel.setText(path);
+        loadMainListView();
+    }
+
+    public void resetCurrentPathDirectly(String path) {
+        String temp = currentPath.substring(0, currentPath.length() - 1);
+        int pos = temp.lastIndexOf('/');
+        String name = currentPath.substring(pos + 1);
+        currentPath = path;
+        pathLabel.setText(name);
         loadMainListView();
     }
 
@@ -254,6 +268,11 @@ public class MainActivity extends AppCompatActivity {
         loadMainListView();
     }
 
+    public void finishTask(String info) {
+        Toast.makeText(MainActivity.this, info, Toast.LENGTH_SHORT);
+        finishTask();
+    }
+
     public int getFoldIcon() {
         SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
         return preferences.getInt("icon", R.mipmap.ic_folder);
@@ -272,5 +291,28 @@ public class MainActivity extends AppCompatActivity {
     public int getFontSize() {
         SharedPreferences preferences = getSharedPreferences("app", Context.MODE_PRIVATE);
         return preferences.getInt("fontSize",18);
+    }
+
+    public void compress(String filename) {
+        zipTask = new ZipTask(MainActivity.this);
+        zipTask.execute("compress", filename, filename + ".zip");
+
+        dialog = new ProgressDialog(MainActivity.this);
+        dialog.setTitle("正在执行...");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    public void decompress(String filename) {
+        zipTask = new ZipTask(MainActivity.this);
+        int pos = filename.lastIndexOf('/');
+        zipTask.execute("decompress", filename, filename.substring(0, pos));
+
+        dialog = new ProgressDialog(MainActivity.this);
+        dialog.setTitle("正在执行...");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.show();
     }
 }

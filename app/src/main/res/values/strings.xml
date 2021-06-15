@@ -8,4 +8,6 @@
     <string name="action_menu_move">Move</string>
     <string name="action_menu_delete">Delete</string>
     <string name="action_menu_detail">Detail</string>
+  <string name="action_compress">Compress</string>
+  <string name="action_decompress">Decompress</string>
 </resources>

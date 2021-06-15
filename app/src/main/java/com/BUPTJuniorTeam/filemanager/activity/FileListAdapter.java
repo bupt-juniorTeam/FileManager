@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.BUPTJuniorTeam.filemanager.R;
 import com.BUPTJuniorTeam.filemanager.utils.FileProperty;
+import com.BUPTJuniorTeam.filemanager.utils.HistoryManager;
 import com.BUPTJuniorTeam.filemanager.utils.SpecifiedFileAccess;
 import java.io.File;
 import java.util.List;
@@ -78,9 +79,16 @@ public class FileListAdapter extends ArrayAdapter<FileProperty> {
             ((MainActivity)context).resetCurrentPath(property.getName());
           }
           else {
+            HistoryManager manager = HistoryManager.getInstance(context);
+            manager.addHistoryItem(property);
             File file = new File(property.getPath() + "/" + property.getName());
             if (file.isDirectory()) {
-              ((MainActivity)context).resetCurrentPath(property.getName() + "/");
+              if (open_only) {
+                ((MainActivity)context).resetCurrentPathDirectly(property.getRelativePath() + property.getName());
+              }
+              else {
+                ((MainActivity)context).resetCurrentPath(property.getName() + "/");
+              }
             }
             else {
               SpecifiedFileAccess access = new SpecifiedFileAccess();
@@ -159,6 +167,12 @@ public class FileListAdapter extends ArrayAdapter<FileProperty> {
         }
         else if ("Detail".equals(title)) {
           showDetailDialog(property);
+        }
+        else if ("Compress".equals(title)) {
+          ((MainActivity)context).compress(property.getPath() + "/" + property.getName());
+        }
+        else if ("Decompress".equals(title)) {
+          ((MainActivity)context).decompress(property.getPath() + "/" + property.getName());
         }
         return true;
       }

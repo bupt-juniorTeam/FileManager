@@ -1,136 +1,145 @@
 package com.BUPTJuniorTeam.filemanager.task;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-
-import androidx.annotation.Nullable;
-
-import com.BUPTJuniorTeam.filemanager.utils.Futils;
-
+import android.content.Context;
+import android.os.AsyncTask;
+import com.BUPTJuniorTeam.filemanager.activity.MainActivity;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-public class ZipTask extends Service {
-    public final String EXTRACT_CONDITION = "ZIPPING";
-    public final String EXTRACT_PROGRESS = "ZIP_PROGRESS";
-    public final String EXTRACT_COMPLETED = "ZIP_COMPLETED";
-    // Binder given to clients
-    HashMap<Integer, Boolean> hash = new HashMap<Integer, Boolean>();
+public class ZipTask extends AsyncTask<String, String, Boolean> {
+    private Context context = null;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    public ZipTask(Context context) {
+        this.context = context;
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+    /**
+     * zip文件压缩
+     * @param inputFile 待压缩文件夹/文件名
+     * @param outputFile 生成的压缩包名字
+     */
+
+    private static void ZipCompress(String inputFile, String outputFile) throws Exception {
+        //创建zip输出流
+        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile));
+        //创建缓冲输出流
+        BufferedOutputStream bos = new BufferedOutputStream(out);
+        File input = new File(inputFile);
+        compress(out, bos, input,null);
+        bos.close();
+        out.close();
     }
+    /**
+     * @param name 压缩文件名，可以写为null保持默认
+     */
+    //递归压缩
+    private static void compress(ZipOutputStream out, BufferedOutputStream bos, File input, String name) throws IOException {
+        if (name == null) {
+            name = input.getName();
+        }
+        //如果路径为目录（文件夹）
+        if (input.isDirectory()) {
+            //取出文件夹中的文件（或子文件夹）
+            File[] flist = input.listFiles();
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    private void publishResult(boolean b) {
-        Intent intent = new Intent("run");
-        intent.putExtra("run", b);
-        sendBroadcast(intent);
-
-    }
-
-    private void publishResults(int id, String fileName, int i, boolean b) {
-        Intent intent = new Intent(EXTRACT_CONDITION);
-        intent.putExtra(EXTRACT_PROGRESS, i);
-        intent.putExtra("id", id);
-        intent.putExtra("name", fileName);
-        intent.putExtra(EXTRACT_COMPLETED, b);
-        sendBroadcast(intent);
-    }
-
-    class zip {
-        public zip() {}
-
-        int count;
-        long size, totalBytes;
-        String fileName;
-
-        public void execute(int id, ArrayList<File> a, String fileOut) {
-            for (File f1 : a) {
-                if(f1.isDirectory()) {
-                    totalBytes = totalBytes + new Futils().folderSize(f1, false);
-                } else {
-                    totalBytes = totalBytes + f1.length();
+            if (flist.length == 0)//如果文件夹为空，则只需在目的地zip文件中写入一个目录进入
+            {
+                out.putNextEntry(new ZipEntry(name + "/"));
+            } else//如果文件夹不为空，则递归调用compress，文件夹中的每一个文件（或文件夹）进行压缩
+            {
+                for (int i = 0; i < flist.length; i++) {
+                    compress(out, bos, flist[i], name + "/" + flist[i].getName());
                 }
             }
-            FileOutputStream out = null;
-            count = a.size();
-            fileName = fileOut;
-            File zipDirectory = new File(fileOut);
-            //publishResult(true);
-            try {
-                out = new FileOutputStream(zipDirectory);
-                zos = new ZipOutputStream(new BufferedOutputStream(out));
-            } catch (Exception e) {
+        } else//如果不是目录（文件夹），即为文件，则先写入目录进入点，之后将文件写入zip文件中
+        {
+            out.putNextEntry(new ZipEntry(name));
+            FileInputStream fos = new FileInputStream(input);
+            BufferedInputStream bis = new BufferedInputStream(fos);
+            int len=-1;
+            //将源文件写入到zip文件中
+            byte[] buf = new byte[1024];
+            while ((len = bis.read(buf)) != -1) {
+                bos.write(buf,0,len);
             }
-
-            try {
-                zos.flush();
-                zos.close();
-            } catch (IOException e) {
-            }
+            bis.close();
+            fos.close();
         }
+    }
 
-        ZipOutputStream zos;
-        private int isCompressed = 0;
+    /**
+     * zip解压
+     * @param inputFile 待解压文件名
+     * @param destDirPath  解压路径
+     */
 
-        private void compressFile(int id, File file, String path) throws IOException {
-            if (!file.isDirectory()) {
+    public static void ZipUncompress(String inputFile,String destDirPath) throws Exception {
+        File srcFile = new File(inputFile);//获取当前压缩文件
+        // 判断源文件是否存在
+        if (!srcFile.exists()) {
+            throw new Exception(srcFile.getPath() + "所指文件不存在");
+        }
+        //开始解压
+        //构建解压输入流
+        ZipInputStream zIn = new ZipInputStream(new FileInputStream(srcFile));
+        ZipEntry entry = null;
+        File file = null;
+        while ((entry = zIn.getNextEntry()) != null) {
+            if (!entry.isDirectory()) {
+                file = new File(destDirPath, entry.getName());
+                if (!file.exists()) {
+                    new File(file.getParent()).mkdirs();//创建此文件的上级目录
+                }
+                OutputStream out = new FileOutputStream(file);
+                BufferedOutputStream bos = new BufferedOutputStream(out);
+                int len = -1;
                 byte[] buf = new byte[1024];
-                int len;
-                FileInputStream in = new FileInputStream(file);
-                if (path.length() > 0)
-                    zos.putNextEntry(new ZipEntry(path + "/" + file.getName()));
-                else
-                    zos.putNextEntry(new ZipEntry(file.getName()));
-                while ((len = in.read(buf)) > 0) {
-                    if (hash.get(id)) {
-                        zos.write(buf, 0, len);
-                        size += len;
-                        //publishResult(true);
-                        int p = Math.round(size * 100 /totalBytes);
-                        System.out.println(id + " " + p + " " + hash.get(id));
-                        //publishResults(id, fileName, p, false);
-                    }
+                while ((len = zIn.read(buf)) != -1) {
+                    bos.write(buf, 0, len);
                 }
-                in.close();
-                return;
-            }
-            if (file.list() == null) {
-                return;
-            }
-            for (String fileName : file.list()) {
-                File f = new File(file.getAbsolutePath() + File.separator
-                        + fileName);
-                compressFile(id, f, path + File.separator + file.getName());
+                // 关流顺序，先打开的后关闭
+                bos.close();
+                out.close();
             }
         }
+    }
 
-        private void decompressFile(int id, File file, String path) throws IOException {
+    @Override
+    protected Boolean doInBackground(String... strings) {
+        String method = strings[0];
+        String source = strings[1];
+        String target = strings[2];
+
+        try {
+            if ("compress".equals(method)) {
+                ZipCompress(source, target);
+            }
+            else if ("decompress".equals(method)) {
+                ZipUncompress(source, target);
+            }
+        }catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean res) {
+        super.onPostExecute(res);
+        if (res) {
+            ((MainActivity)context).finishTask("操作成功");
+        }
+        else {
+            ((MainActivity)context).finishTask("操作失败");
         }
     }
 }
