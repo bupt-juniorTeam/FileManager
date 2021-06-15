@@ -1,10 +1,13 @@
 package com.BUPTJuniorTeam.filemanager.utils;
 
+import android.os.AsyncTask;
+
 import java.io.*;
+import java.util.ArrayList;
 import java.util.zip.*;
 import java.util.zip.ZipEntry;
 
-public class FileZip {
+public class FileZip extends AsyncTask<String, String, ArrayList<FileProperty>> {
     /**
      * zip文件压缩
      * @param inputFile 待压缩文件夹/文件名
@@ -104,5 +107,10 @@ public class FileZip {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected ArrayList<FileProperty> doInBackground(String... strings) {
+        return null;
     }
 }
