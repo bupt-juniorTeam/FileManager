@@ -27,7 +27,7 @@ public class PreferenceActivity extends AppCompatActivity {
   private Button button = null;
   private RadioGroup group = null;
 
-  private String[] arrayForColor={"#D71345", "#BED742", "#4E72B8", "#9B95C9", "#45B97C"};
+  private String[] arrayForColor={"#FFFFFF","#D71345", "#BED742", "#4E72B8", "#9B95C9", "#45B97C"};
 
 
   public void onRadioButtonClicked(View view) {
